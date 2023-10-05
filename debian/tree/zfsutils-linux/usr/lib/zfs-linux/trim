@@ -1,0 +1,69 @@
+#!/bin/sh -u
+
+# directly exit successfully when zfs module is not loaded
+if ! [ -d /sys/module/zfs ]; then
+	exit 0
+fi
+
+# [auto] / enable / disable
+PROPERTY_NAME="org.debian:periodic-trim"
+
+get_property () {
+	# Detect the ${PROPERTY_NAME} property on a given pool.
+	# We are abusing user-defined properties on the root dataset,
+	# since they're not available on pools https://github.com/openzfs/zfs/pull/11680
+	# TODO: use zpool user-defined property when such feature is available.
+	pool="$1"
+	zfs get -H -o value "${PROPERTY_NAME}" "${pool}" 2>/dev/null
+}
+
+trim_if_not_already_trimming () {
+	pool="$1"
+	if ! zpool status "${pool}" | grep -q "trimming"; then
+		# This will error on HDD-only pools: doesn't matter
+		zpool trim "${pool}"
+	fi
+}
+
+# Walk up the kernel parent names:
+# this will catch devices from LVM &a.
+get_transp () {
+	dev="$1"
+	while pd="$(lsblk -dnr -o PKNAME "$dev")"; do
+		if [ -z "$pd" ]; then
+			break
+		else
+			dev="/dev/$pd"
+		fi
+	done
+	lsblk -dnr -o TRAN "$dev"
+}
+
+pool_is_nvme_only () {
+	pool="$1"
+	# get a list of devices attached to the specified pool
+	zpool list -vHP "${pool}" | \
+		awk -F'\t' '$2 ~ "^/dev/" {print $2}' | \
+	while read -r dev
+	do
+		[ "$(get_transp "$dev")" = "nvme" ] || return
+	done
+}
+
+# TRIM all healthy pools that are not already trimming as per their configs.
+zpool list -H -o health,name 2>&1 | \
+	awk -F'\t' '$1 == "ONLINE" {print $2}' | \
+while read -r pool
+do
+	# read user-defined config
+	ret=$(get_property "${pool}") || continue
+	case "${ret}" in
+		disable);;
+		enable)	trim_if_not_already_trimming "${pool}" ;;
+		-|auto)	if pool_is_nvme_only "${pool}"; then trim_if_not_already_trimming "${pool}"; fi ;;
+		*)	cat > /dev/stderr <<EOF
+$0: [WARNING] illegal value "${ret}" for property "${PROPERTY_NAME}" of ZFS dataset "${pool}".
+$0: Acceptable choices for this property are: auto, enable, disable. The default is auto.
+EOF
+	esac
+done

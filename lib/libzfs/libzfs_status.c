@@ -526,6 +526,14 @@ zpool_get_status(zpool_handle_t *zhp, char **msgid, zpool_errata_t *errata)
 		else
 			*msgid = zfs_msgid_table[ret];
 	}
+
+	// On Ubuntu GRUB is incompatible with newest features of zfs. In order to
+	// prevent people from upgrading bpool, the message to suggest to upgrade
+	// the pool is removed.
+	if (ret == ZPOOL_STATUS_FEAT_DISABLED && strcmp(zpool_get_name(zhp), "bpool") == 0) {
+		ret = ZPOOL_STATUS_OK;
+	}
+
 	return (ret);
 }
 

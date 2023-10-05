@@ -8940,6 +8940,16 @@ upgrade_enable_all(zpool_handle_t *zhp, int *countp)
 {
 	int i, ret, count;
 	boolean_t firstff = B_TRUE;
+
+	// On ubuntu, upgrade of bpool is disabled to prevent users to break their
+	// system by upgrading to features not supported by GRUB
+	if (strcmp("bpool", zpool_get_name(zhp)) == 0) {
+		(void) fprintf(stderr, gettext("'zpool upgrade' is disabled for"
+		    " 'bpool' to keep compatibility with GRUB.\n"
+		    "Skipping upgrade.\n"));
+		return (0);
+	}
+
 	nvlist_t *enabled = zpool_get_features(zhp);
 
 	char compat[ZFS_MAXPROPLEN];

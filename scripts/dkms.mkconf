@@ -2,7 +2,7 @@
 
 PROG=$0
 
-pkgcfg=/etc/sysconfig/zfs
+pkgcfg=/etc/dkms/zfs.conf
 
 while getopts "n:v:c:f:" opt; do
 	case $opt in
@@ -25,6 +25,12 @@ PACKAGE_NAME="${pkgname}"
 PACKAGE_VERSION="${pkgver}"
 PACKAGE_CONFIG="${pkgcfg}"
 NO_WEAK_MODULES="yes"
+if [ -f \$kernel_source_dir/.config ]; then
+    . \$kernel_source_dir/.config
+    if [ "\$CONFIG_PREEMPT_RT" = "y" ]; then
+        BUILD_EXCLUSIVE_KERNEL="NOT ON PREEMPT_RT"
+    fi
+fi
 PRE_BUILD="configure
   --prefix=/usr
   --with-config=kernel
@@ -41,6 +47,12 @@ PRE_BUILD="configure
     [[ -n \"\${ICP_ROOT}\" ]] && \\
     {
       echo --with-qat=\"\${ICP_ROOT}\"
+    }
+  )
+  \$(
+    [[ -n \"\${CROSS_COMPILE}\" ]] && \\
+    {
+      echo --host=\"\${CROSS_COMPILE%-}\"
     }
   )
   \$(
