@@ -102,6 +102,7 @@ libzfs.so.4 libzfs4linux #MINVER#
  snapshot_namecheck@Base 2.0
  spa_feature_table@Base 0.8.2
  unshare_one@Base 2.0
+ use_color@Base 2.0
  zcmd_alloc_dst_nvlist@Base 0.8.2
  zcmd_expand_dst_nvlist@Base 0.8.2
  zcmd_free_nvlists@Base 0.8.2
@@ -386,6 +387,7 @@ libzfs.so.4 libzfs4linux #MINVER#
  zpool_vdev_path_to_guid@Base 0.8.2
  zpool_vdev_remove@Base 0.8.2
  zpool_vdev_remove_cancel@Base 0.8.2
+ zpool_vdev_remove_wanted@Base 2.1.10
  zpool_vdev_split@Base 0.8.2
  zpool_wait@Base 2.0
  zpool_wait_status@Base 2.0
@@ -488,7 +490,6 @@ libzfs_core.so.3 libzfs4linux #MINVER#
  atomic_inc_ulong_nv@Base 2.0
  atomic_inc_ushort@Base 2.0
  atomic_inc_ushort_nv@Base 2.0
- (optional)atomic_load_64@Base 2.1
  atomic_or_16@Base 2.0
  atomic_or_16_nv@Base 2.0
  atomic_or_32@Base 2.0
@@ -506,7 +507,6 @@ libzfs_core.so.3 libzfs4linux #MINVER#
  atomic_or_ushort@Base 2.0
  atomic_or_ushort_nv@Base 2.0
  atomic_set_long_excl@Base 2.0
- (optional)atomic_store_64@Base 2.1
  atomic_sub_16@Base 2.0
  atomic_sub_16_nv@Base 2.0
  atomic_sub_32@Base 2.0
@@ -649,8 +649,6 @@ libzfs_core.so.3 libzfs4linux #MINVER#
  print_timestamp@Base 2.0
  slice_cache_compare@Base 2.0
  spl_pagesize@Base 2.0
- strlcat@Base 2.0
- strlcpy@Base 2.0
  tpool_abandon@Base 2.0
  tpool_create@Base 2.0
  tpool_destroy@Base 2.0
@@ -678,6 +676,8 @@ libzfs_core.so.3 libzfs4linux #MINVER#
  zfs_niceraw@Base 2.0
  zfs_nicetime@Base 2.0
  zfs_resolve_shortname@Base 2.0
+ zfs_setproctitle@Base 2.1.10
+ zfs_setproctitle_init@Base 2.1.10
  zfs_strcmp_pathname@Base 2.0
  zfs_strip_partition@Base 2.0
  zfs_strip_path@Base 2.0
