@@ -185,7 +185,7 @@ ifeq ($(BUILD_UDEB), true)
 endif
 
 override_dh_install:
-	find debian/tmp/lib -name *.la -delete
+	find debian/tmp/lib -name '*.la' -delete
 	dh_install
 
 override_dh_missing:
