@@ -87,3 +87,7 @@ Makefile.in
 *.orig
 *.tmp
 *.log
+
+# Debian
+!/debian/
+!/debian/**
