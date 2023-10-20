@@ -1,3 +1,9 @@
+zfs-linux (2.2.0-0arter97) jammy; urgency=medium
+
+  * 2.2.0
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Fri, 20 Oct 2023 16:24:23 +0900
+
 zfs-linux (2.2.0~rc3-0ubuntu4) mantic; urgency=medium
 
   * Properly unregister sysctl entries when spl is unloaded (LP: #2034510):
