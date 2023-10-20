@@ -400,6 +400,7 @@ libzfs.so.4 libzfs4linux #MINVER#
  zfs_prop_readonly@Base 0.8.2
  zfs_prop_set@Base 0.8.2
  zfs_prop_set_list@Base 0.8.2
+ zfs_prop_set_list_flags@Base 2.2.0
  zfs_prop_setonce@Base 0.8.2
  zfs_prop_string_to_index@Base 0.8.2
  zfs_prop_to_name@Base 0.8.2

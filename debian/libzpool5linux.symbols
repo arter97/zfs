@@ -415,6 +415,7 @@ libzpool.so.5 libzpool5linux #MINVER#
  bqueue_init@Base 0.8.2
  brt_create@Base 2.1.99-0ubuntu1
  brt_entry_decref@Base 2.1.99-0ubuntu1
+ brt_entry_get_refcount@Base 2.2.0
  brt_fini@Base 2.1.99-0ubuntu1
  brt_get_dspace@Base 2.1.99-0ubuntu1
  brt_get_ratio@Base 2.1.99-0ubuntu1
@@ -593,6 +594,7 @@ libzpool.so.5 libzpool5linux #MINVER#
  dmu_buf_hold_array_by_dnode@Base 2.0
  dmu_buf_hold_by_dnode@Base 0.8.2
  dmu_buf_hold_noread@Base 0.8.2
+ dmu_buf_hold_noread_by_dnode@Base 2.2.0
  dmu_buf_is_dirty@Base 0.8.2
  dmu_buf_lock_parent@Base 2.0
  dmu_buf_redact@Base 2.0
@@ -1534,8 +1536,6 @@ libzpool.so.5 libzpool5linux #MINVER#
  metaslab_df_free_pct@Base 0.8.2
  metaslab_disable@Base 0.8.2
  metaslab_enable@Base 0.8.2
- metaslab_fastwrite_mark@Base 0.8.2
- metaslab_fastwrite_unmark@Base 0.8.2
  metaslab_fini@Base 0.8.2
  metaslab_flush@Base 2.0
  metaslab_force_ganging@Base 0.8.2
@@ -1558,7 +1558,6 @@ libzpool.so.5 libzpool5linux #MINVER#
  metaslab_init@Base 0.8.2
  metaslab_largest_allocatable@Base 2.0
  metaslab_load@Base 0.8.2
- metaslab_load_pct@Base 0.8.2
  metaslab_preload_limit@Base 0.8.2
  metaslab_recalculate_weight_and_sort@Base 0.8.2
  metaslab_set_selected_txg@Base 2.0
