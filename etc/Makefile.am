@@ -55,6 +55,7 @@ systemdunit_DATA = \
 	%D%/systemd/system/zfs-import-cache.service \
 	%D%/systemd/system/zfs-import-scan.service \
 	%D%/systemd/system/zfs-import.target \
+	%D%/systemd/system/zfs-load-module.service \
 	%D%/systemd/system/zfs-mount.service \
 	%D%/systemd/system/zfs-scrub-monthly@.timer \
 	%D%/systemd/system/zfs-scrub-weekly@.timer \
@@ -77,18 +78,10 @@ systemd-install-data-hook:
 	ln -sf /dev/null "$(DESTDIR)$(systemdunitdir)/zfs-load-key.service"
 
 
-systemdgenerator_PROGRAMS = \
+systemdgenerator_SCRIPTS = \
 	%D%/systemd/system-generators/zfs-mount-generator
 
-%C%_systemd_system_generators_zfs_mount_generator_SOURCES = \
-	%D%/systemd/system-generators/zfs-mount-generator.c
-
-%C%_systemd_system_generators_zfs_mount_generator_LDADD = \
-	libzfs.la
-
-%C%_systemd_system_generators_zfs_mount_generator_LDFLAGS = -pthread
-
-CPPCHECKTARGETS += $(systemdgenerator_PROGRAMS)
+SUBSTFILES += $(systemdgenerator_SCRIPTS)
 endif
 
 

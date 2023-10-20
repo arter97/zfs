@@ -5,6 +5,7 @@ DefaultDependencies=no
 After=systemd-udev-settle.service
 After=zfs-import.target
 After=systemd-remount-fs.service
+After=zfs-load-module.service
 Before=local-fs.target
 ConditionPathIsDirectory=/sys/module/zfs
 
@@ -12,7 +13,7 @@ ConditionPathIsDirectory=/sys/module/zfs
 Type=oneshot
 RemainAfterExit=yes
 EnvironmentFile=-@initconfdir@/zfs
-ExecStart=@sbindir@/zfs mount -a
+ExecStart=zfs mount -a
 
 [Install]
 WantedBy=zfs.target
