@@ -2,6 +2,7 @@
 enable zfs-import-cache.service
 disable zfs-import-scan.service
 enable zfs-import.target
+enable zfs-load-module.service
 enable zfs-mount.service
 enable zfs-share.service
 enable zfs-zed.service

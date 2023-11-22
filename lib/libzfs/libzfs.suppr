@@ -11,3 +11,51 @@
 
 [suppress_variable]
 	name = zfs_deleg_perm_tab
+
+[suppress_type]
+	name = regex_t
+
+[suppress_type]
+	name = zfs_handle_t
+
+[suppress_type]
+	name = differ_info_t
+
+[suppress_type]
+	name = renameflags_t
+
+[suppress_type]
+	name = splitflags_t
+
+[suppress_type]
+	name = libzfs_handle_t
+
+[suppress_type]
+	name = zfs_prop_t
+
+[suppress_type]
+	name = zfs_type_t
+
+[suppress_type]
+	name = zfs_share_proto_t
+
+[suppress_type]
+	name = zprop_source_t
+
+[suppress_type]
+	name = zprop_list_t
+
+[suppress_type]
+	name = zfs_userquota_prop_t
+
+[suppress_type]
+	name = zfs_wait_activity_t
+
+[suppress_type]
+	name = zfs_share_type_t
+
+[suppress_type]
+	name = pool_state_t
+
+[suppress_type]
+	name = nvpair_t
