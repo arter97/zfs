@@ -520,6 +520,8 @@ libzfs.so.4 libzfs4linux #MINVER#
  zpool_open@Base 0.8.2
  zpool_open_canfail@Base 0.8.2
  zpool_pool_state_to_name@Base 0.8.2
+ zpool_prepare_and_label_disk@Base 2.2.1
+ zpool_prepare_disk@Base 2.2.1
  zpool_print_unsup_feat@Base 0.8.2
  zpool_prop_align_right@Base 0.8.2
  zpool_prop_column_name@Base 0.8.2
@@ -567,6 +569,8 @@ libzfs.so.4 libzfs4linux #MINVER#
  zpool_vdev_remove@Base 0.8.2
  zpool_vdev_remove_cancel@Base 0.8.2
  zpool_vdev_remove_wanted@Base 2.1.99-0ubuntu1
+ zpool_vdev_script_alloc_env@Base 2.2.1
+ zpool_vdev_script_free_env@Base 2.2.1
  zpool_vdev_split@Base 0.8.2
  zpool_wait@Base 2.0
  zpool_wait_status@Base 2.0
