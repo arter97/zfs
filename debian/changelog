@@ -1,3 +1,9 @@
+zfs-linux (2.2.1-2arter97) jammy; urgency=medium
+
+  * Fixes compilation on Linux v6.6 with LLVM toolchain.
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Wed, 23 Nov 2023 03:27:51 +0900
+
 zfs-linux (2.2.1-1arter97) jammy; urgency=medium
 
   * 2.2.1
