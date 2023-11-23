@@ -68,8 +68,6 @@ ZFS_AC_DEBUG_KMEM_TRACKING
 ZFS_AC_DEBUG_INVARIANTS
 
 AC_CONFIG_FILES([
-	contrib/debian/rules
-	contrib/debian/changelog
 	Makefile
 	include/Makefile
 	lib/libzfs/libzfs.pc

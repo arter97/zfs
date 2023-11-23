@@ -92,3 +92,4 @@ nfs41acl_xdr.c
 *.log
 
 !/debian
+!/contrib/debian/**
