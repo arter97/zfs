@@ -90,3 +90,5 @@ nfs41acl_xdr.c
 *.orig
 *.tmp
 *.log
+
+!/debian
