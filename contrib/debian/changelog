@@ -1,3 +1,9 @@
+openzfs-linux (2.2.1-0arter97~truenas) unstable; urgency=low
+
+  * OpenZFS 2.2.1 for TrueNAS SCALE Cobia
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Wed, 23 Nov 2023 13:54:51 +0900
+
 openzfs-linux (2.2.0-0) unstable; urgency=medium
 
   * Merge tag zfs-2.2.0
