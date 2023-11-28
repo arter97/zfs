@@ -1,3 +1,9 @@
+zfs-linux (2.2.1-3arter97) jammy; urgency=medium
+
+  * Added fix for data corruption
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Tue, 28 Nov 2023 11:38:30 +0900
+
 zfs-linux (2.2.1-2arter97) jammy; urgency=medium
 
   * Fixes compilation on Linux v6.6 with LLVM toolchain.
