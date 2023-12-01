@@ -1,3 +1,9 @@
+zfs-linux (2.2.2-0arter97) jammy; urgency=medium
+
+  * 2.2.2
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Fri, 01 Dec 2023 12:00:18 +0900
+
 zfs-linux (2.2.1-3arter97) jammy; urgency=medium
 
   * Added fix for data corruption
