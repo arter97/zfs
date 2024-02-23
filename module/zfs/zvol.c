@@ -370,6 +370,40 @@ out:
 }
 
 /*
+ * Update volthreading.
+ */
+int
+zvol_set_volthreading(const char *name, boolean_t value)
+{
+	zvol_state_t *zv = zvol_find_by_name(name, RW_NONE);
+	if (zv == NULL)
+		return (ENOENT);
+	zv->zv_threading = value;
+	mutex_exit(&zv->zv_state_lock);
+	return (0);
+}
+
+/*
+ * Update zvol ro property.
+ */
+int
+zvol_set_ro(const char *name, boolean_t value)
+{
+	zvol_state_t *zv = zvol_find_by_name(name, RW_NONE);
+	if (zv == NULL)
+		return (-1);
+	if (value) {
+		zvol_os_set_disk_ro(zv, 1);
+		zv->zv_flags |= ZVOL_RDONLY;
+	} else {
+		zvol_os_set_disk_ro(zv, 0);
+		zv->zv_flags &= ~ZVOL_RDONLY;
+	}
+	mutex_exit(&zv->zv_state_lock);
+	return (0);
+}
+
+/*
  * Sanity check volume block size.
  */
 int
@@ -417,6 +451,8 @@ zvol_replay_truncate(void *arg1, void *arg2, boolean_t byteswap)
 	lr_truncate_t *lr = arg2;
 	uint64_t offset, length;
 
+	ASSERT3U(lr->lr_common.lrc_reclen, >=, sizeof (*lr));
+
 	if (byteswap)
 		byteswap_uint64_array(lr, sizeof (*lr));
 
@@ -453,6 +489,8 @@ zvol_replay_write(void *arg1, void *arg2, boolean_t byteswap)
 	dmu_tx_t *tx;
 	int error;
 
+	ASSERT3U(lr->lr_common.lrc_reclen, >=, sizeof (*lr));
+
 	if (byteswap)
 		byteswap_uint64_array(lr, sizeof (*lr));
 
@@ -480,60 +518,6 @@ zvol_replay_write(void *arg1, void *arg2, boolean_t byteswap)
 	}
 
 	return (error);
-}
-
-/*
- * Replay a TX_CLONE_RANGE ZIL transaction that didn't get committed
- * after a system failure.
- *
- * TODO: For now we drop block cloning transations for ZVOLs as they are
- *       unsupported, but we still need to inform BRT about that as we
- *       claimed them during pool import.
- *       This situation can occur when we try to import a pool from a ZFS
- *       version supporting block cloning for ZVOLs into a system that
- *       has this ZFS version, that doesn't support block cloning for ZVOLs.
- */
-static int
-zvol_replay_clone_range(void *arg1, void *arg2, boolean_t byteswap)
-{
-	char name[ZFS_MAX_DATASET_NAME_LEN];
-	zvol_state_t *zv = arg1;
-	objset_t *os = zv->zv_objset;
-	lr_clone_range_t *lr = arg2;
-	blkptr_t *bp;
-	dmu_tx_t *tx;
-	spa_t *spa;
-	uint_t ii;
-	int error;
-
-	dmu_objset_name(os, name);
-	cmn_err(CE_WARN, "ZFS dropping block cloning transaction for %s.",
-	    name);
-
-	if (byteswap)
-		byteswap_uint64_array(lr, sizeof (*lr));
-
-	tx = dmu_tx_create(os);
-	error = dmu_tx_assign(tx, TXG_WAIT);
-	if (error) {
-		dmu_tx_abort(tx);
-		return (error);
-	}
-
-	spa = os->os_spa;
-
-	for (ii = 0; ii < lr->lr_nbps; ii++) {
-		bp = &lr->lr_bps[ii];
-
-		if (!BP_IS_HOLE(bp)) {
-			zio_free(spa, dmu_tx_get_txg(tx), bp);
-		}
-	}
-
-	(void) zil_replaying(zv->zv_zilog, tx);
-	dmu_tx_commit(tx);
-
-	return (0);
 }
 
 static int
@@ -570,7 +554,7 @@ zil_replay_func_t *const zvol_replay_vector[TX_MAX_TYPE] = {
 	zvol_replay_err,	/* TX_SETSAXATTR */
 	zvol_replay_err,	/* TX_RENAME_EXCHANGE */
 	zvol_replay_err,	/* TX_RENAME_WHITEOUT */
-	zvol_replay_clone_range	/* TX_CLONE_RANGE */
+	zvol_replay_err,	/* TX_CLONE_RANGE */
 };
 
 /*
@@ -1541,6 +1525,7 @@ typedef struct zvol_set_prop_int_arg {
 	const char *zsda_name;
 	uint64_t zsda_value;
 	zprop_source_t zsda_source;
+	zfs_prop_t zsda_prop;
 	dmu_tx_t *zsda_tx;
 } zvol_set_prop_int_arg_t;
 
@@ -1549,7 +1534,7 @@ typedef struct zvol_set_prop_int_arg {
  * conditions are imposed.
  */
 static int
-zvol_set_snapdev_check(void *arg, dmu_tx_t *tx)
+zvol_set_common_check(void *arg, dmu_tx_t *tx)
 {
 	zvol_set_prop_int_arg_t *zsda = arg;
 	dsl_pool_t *dp = dmu_tx_pool(tx);
@@ -1566,17 +1551,33 @@ zvol_set_snapdev_check(void *arg, dmu_tx_t *tx)
 }
 
 static int
-zvol_set_snapdev_sync_cb(dsl_pool_t *dp, dsl_dataset_t *ds, void *arg)
+zvol_set_common_sync_cb(dsl_pool_t *dp, dsl_dataset_t *ds, void *arg)
 {
-	(void) arg;
+	zvol_set_prop_int_arg_t *zsda = arg;
 	char dsname[MAXNAMELEN];
 	zvol_task_t *task;
-	uint64_t snapdev;
+	uint64_t prop;
 
+	const char *prop_name = zfs_prop_to_name(zsda->zsda_prop);
 	dsl_dataset_name(ds, dsname);
-	if (dsl_prop_get_int_ds(ds, "snapdev", &snapdev) != 0)
+
+	if (dsl_prop_get_int_ds(ds, prop_name, &prop) != 0)
 		return (0);
-	task = zvol_task_alloc(ZVOL_ASYNC_SET_SNAPDEV, dsname, NULL, snapdev);
+
+	switch (zsda->zsda_prop) {
+		case ZFS_PROP_VOLMODE:
+			task = zvol_task_alloc(ZVOL_ASYNC_SET_VOLMODE, dsname,
+			    NULL, prop);
+			break;
+		case ZFS_PROP_SNAPDEV:
+			task = zvol_task_alloc(ZVOL_ASYNC_SET_SNAPDEV, dsname,
+			    NULL, prop);
+			break;
+		default:
+			task = NULL;
+			break;
+	}
+
 	if (task == NULL)
 		return (0);
 
@@ -1586,14 +1587,14 @@ zvol_set_snapdev_sync_cb(dsl_pool_t *dp, dsl_dataset_t *ds, void *arg)
 }
 
 /*
- * Traverse all child datasets and apply snapdev appropriately.
+ * Traverse all child datasets and apply the property appropriately.
  * We call dsl_prop_set_sync_impl() here to set the value only on the toplevel
- * dataset and read the effective "snapdev" on every child in the callback
+ * dataset and read the effective "property" on every child in the callback
  * function: this is because the value is not guaranteed to be the same in the
  * whole dataset hierarchy.
  */
 static void
-zvol_set_snapdev_sync(void *arg, dmu_tx_t *tx)
+zvol_set_common_sync(void *arg, dmu_tx_t *tx)
 {
 	zvol_set_prop_int_arg_t *zsda = arg;
 	dsl_pool_t *dp = dmu_tx_pool(tx);
@@ -1606,115 +1607,31 @@ zvol_set_snapdev_sync(void *arg, dmu_tx_t *tx)
 
 	error = dsl_dataset_hold(dp, zsda->zsda_name, FTAG, &ds);
 	if (error == 0) {
-		dsl_prop_set_sync_impl(ds, zfs_prop_to_name(ZFS_PROP_SNAPDEV),
+		dsl_prop_set_sync_impl(ds, zfs_prop_to_name(zsda->zsda_prop),
 		    zsda->zsda_source, sizeof (zsda->zsda_value), 1,
 		    &zsda->zsda_value, zsda->zsda_tx);
 		dsl_dataset_rele(ds, FTAG);
 	}
-	dmu_objset_find_dp(dp, dd->dd_object, zvol_set_snapdev_sync_cb,
+
+	dmu_objset_find_dp(dp, dd->dd_object, zvol_set_common_sync_cb,
 	    zsda, DS_FIND_CHILDREN);
 
 	dsl_dir_rele(dd, FTAG);
 }
 
 int
-zvol_set_snapdev(const char *ddname, zprop_source_t source, uint64_t snapdev)
+zvol_set_common(const char *ddname, zfs_prop_t prop, zprop_source_t source,
+    uint64_t val)
 {
 	zvol_set_prop_int_arg_t zsda;
 
 	zsda.zsda_name = ddname;
 	zsda.zsda_source = source;
-	zsda.zsda_value = snapdev;
+	zsda.zsda_value = val;
+	zsda.zsda_prop = prop;
 
-	return (dsl_sync_task(ddname, zvol_set_snapdev_check,
-	    zvol_set_snapdev_sync, &zsda, 0, ZFS_SPACE_CHECK_NONE));
-}
-
-/*
- * Sanity check the dataset for safe use by the sync task.  No additional
- * conditions are imposed.
- */
-static int
-zvol_set_volmode_check(void *arg, dmu_tx_t *tx)
-{
-	zvol_set_prop_int_arg_t *zsda = arg;
-	dsl_pool_t *dp = dmu_tx_pool(tx);
-	dsl_dir_t *dd;
-	int error;
-
-	error = dsl_dir_hold(dp, zsda->zsda_name, FTAG, &dd, NULL);
-	if (error != 0)
-		return (error);
-
-	dsl_dir_rele(dd, FTAG);
-
-	return (error);
-}
-
-static int
-zvol_set_volmode_sync_cb(dsl_pool_t *dp, dsl_dataset_t *ds, void *arg)
-{
-	(void) arg;
-	char dsname[MAXNAMELEN];
-	zvol_task_t *task;
-	uint64_t volmode;
-
-	dsl_dataset_name(ds, dsname);
-	if (dsl_prop_get_int_ds(ds, "volmode", &volmode) != 0)
-		return (0);
-	task = zvol_task_alloc(ZVOL_ASYNC_SET_VOLMODE, dsname, NULL, volmode);
-	if (task == NULL)
-		return (0);
-
-	(void) taskq_dispatch(dp->dp_spa->spa_zvol_taskq, zvol_task_cb,
-	    task, TQ_SLEEP);
-	return (0);
-}
-
-/*
- * Traverse all child datasets and apply volmode appropriately.
- * We call dsl_prop_set_sync_impl() here to set the value only on the toplevel
- * dataset and read the effective "volmode" on every child in the callback
- * function: this is because the value is not guaranteed to be the same in the
- * whole dataset hierarchy.
- */
-static void
-zvol_set_volmode_sync(void *arg, dmu_tx_t *tx)
-{
-	zvol_set_prop_int_arg_t *zsda = arg;
-	dsl_pool_t *dp = dmu_tx_pool(tx);
-	dsl_dir_t *dd;
-	dsl_dataset_t *ds;
-	int error;
-
-	VERIFY0(dsl_dir_hold(dp, zsda->zsda_name, FTAG, &dd, NULL));
-	zsda->zsda_tx = tx;
-
-	error = dsl_dataset_hold(dp, zsda->zsda_name, FTAG, &ds);
-	if (error == 0) {
-		dsl_prop_set_sync_impl(ds, zfs_prop_to_name(ZFS_PROP_VOLMODE),
-		    zsda->zsda_source, sizeof (zsda->zsda_value), 1,
-		    &zsda->zsda_value, zsda->zsda_tx);
-		dsl_dataset_rele(ds, FTAG);
-	}
-
-	dmu_objset_find_dp(dp, dd->dd_object, zvol_set_volmode_sync_cb,
-	    zsda, DS_FIND_CHILDREN);
-
-	dsl_dir_rele(dd, FTAG);
-}
-
-int
-zvol_set_volmode(const char *ddname, zprop_source_t source, uint64_t volmode)
-{
-	zvol_set_prop_int_arg_t zsda;
-
-	zsda.zsda_name = ddname;
-	zsda.zsda_source = source;
-	zsda.zsda_value = volmode;
-
-	return (dsl_sync_task(ddname, zvol_set_volmode_check,
-	    zvol_set_volmode_sync, &zsda, 0, ZFS_SPACE_CHECK_NONE));
+	return (dsl_sync_task(ddname, zvol_set_common_check,
+	    zvol_set_common_sync, &zsda, 0, ZFS_SPACE_CHECK_NONE));
 }
 
 void
