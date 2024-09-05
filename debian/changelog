@@ -1,3 +1,9 @@
+zfs-linux (2.2.6-0arter97) jammy; urgency=medium
+
+  * 2.2.6
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Thu, 05 Sep 2024 16:20:40 +0900
+
 zfs-linux (2.2.5-0arter97) jammy; urgency=medium
 
   * 2.2.5
