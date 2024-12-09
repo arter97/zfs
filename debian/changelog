@@ -1,3 +1,9 @@
+zfs-linux (2.2.7-0arter97) jammy; urgency=medium
+
+  * 2.2.7 (pre-release tag e269af1b3c7b1b1c000d05f147a2f75e5e72e0ca)
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Mon, 09 Dec 2024 23:06:40 +0900
+
 zfs-linux (2.2.6-0arter97) jammy; urgency=medium
 
   * 2.2.6
