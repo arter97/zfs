@@ -2,4 +2,4 @@ usr/bin/arc_summary.py
 usr/share/zfs/zfs-helpers.sh
 etc/init.d
 etc/sudoers.d
-usr/lib/systemd/system/zfs-import.service
+lib/systemd/system/zfs-import.service

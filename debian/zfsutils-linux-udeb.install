@@ -1,2 +1,2 @@
-../tmp/usr/lib/udev/*_id    /usr/sbin
-../tmp/usr/sbin/*	/usr/sbin
+../tmp/lib/udev/*_id    /sbin
+../tmp/sbin/*	/sbin
