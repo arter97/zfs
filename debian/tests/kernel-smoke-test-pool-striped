@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -e
+
+./debian/tests/kernel-smoke-test-pool "striped"

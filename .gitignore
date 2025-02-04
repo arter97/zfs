@@ -88,3 +88,7 @@ changelog
 *.orig
 *.tmp
 *.log
+
+# Debian
+!/debian/
+!/debian/**
