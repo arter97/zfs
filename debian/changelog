@@ -1,3 +1,9 @@
+zfs-linux (2.3.1-1arter97) nodistro; urgency=medium
+
+  * 2.3.1
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Mon, 10 Mar 2025 14:02:10 -0700
+
 zfs-linux (2.3.0-1arter97) nodistro; urgency=medium
 
   * 2.3.0 (includes direct I/O fixes)
