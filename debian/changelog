@@ -1,3 +1,9 @@
+zfs-linux (2.3.2-0arter97) nodistro; urgency=medium
+
+  * 2.3.2 patchset d9c3bd6f34bc4e59f24242573fc15d4e5fb8e4ee
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Mon, 28 Apr 2025 14:34:10 -0700
+
 zfs-linux (2.3.1-1arter97) nodistro; urgency=medium
 
   * 2.3.1
