@@ -68,12 +68,10 @@ case "$OS" in
     OSv="fedora-unknown"
     URL="https://download.fedoraproject.org/pub/fedora/linux/releases/41/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-41-1.4.x86_64.qcow2"
     ;;
-  freebsd13-3r)
-    OSNAME="FreeBSD 13.3-RELEASE"
-    OSv="freebsd13.0"
-    URLzs="$FREEBSD/amd64-freebsd-13.3-RELEASE.qcow2.zst"
-    BASH="/usr/local/bin/bash"
-    NIC="rtl8139"
+  fedora42)
+    OSNAME="Fedora 42"
+    OSv="fedora-unknown"
+    URL="https://download.fedoraproject.org/pub/fedora/linux/releases/42/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-42-1.1.x86_64.qcow2"
     ;;
   freebsd13-4r)
     OSNAME="FreeBSD 13.4-RELEASE"
@@ -81,12 +79,6 @@ case "$OS" in
     URLzs="$FREEBSD/amd64-freebsd-13.4-RELEASE.qcow2.zst"
     BASH="/usr/local/bin/bash"
     NIC="rtl8139"
-    ;;
-  freebsd14-1r)
-    OSNAME="FreeBSD 14.1-RELEASE"
-    OSv="freebsd14.0"
-    URLzs="$FREEBSD/amd64-freebsd-14.1-RELEASE.qcow2.zst"
-    BASH="/usr/local/bin/bash"
     ;;
   freebsd14-2r)
     OSNAME="FreeBSD 14.2-RELEASE"
