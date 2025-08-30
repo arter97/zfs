@@ -1,3 +1,9 @@
+zfs-linux (2.3.4-1arter97) nodistro; urgency=medium
+
+  * Fixed LLVM 21 compatibility
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Fri, 29 Aug 2025 17:08:00 -0700
+
 zfs-linux (2.3.4-0arter97) nodistro; urgency=medium
 
   * 2.3.4
