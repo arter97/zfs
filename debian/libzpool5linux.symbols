@@ -1736,7 +1736,6 @@ libzpool.so.5 libzpool5linux #MINVER#
  scan_fini@Base 0.8.2
  scan_init@Base 0.8.2
  secpolicy_zfs@Base 0.8.2
- secpolicy_zfs_proc@Base 2.0
  seq_printf@Base 0.8.2
  set_global_var@Base 0.8.2
  (arch=amd64)sha256_avx2_impl@Base 2.1.99-0ubuntu1
