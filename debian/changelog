@@ -11,7 +11,7 @@ zfs-linux (2.3.5-2) unstable; urgency=medium
   * d/patches/bump-Linux-Minimum.patch: refresh
   * d/patches: enable-linux-experimental to allow building with 6.18
   * d/upstream/signing-key.asc: add 6AD860EED4598027
-  * d/libzpool6linux.symbols: update
+  * d/libzpool7linux.symbols: update
   * d/source/lintian-overrides: drop unused ones, add python test ones
   * d/control*: std-ver 4.7.2, no change required
   * d/pyzfs-doc.lintian-overrides: removed
@@ -29,7 +29,7 @@ zfs-linux (2.3.5-1) unstable; urgency=medium
 zfs-linux (2.3.4-1) unstable; urgency=medium
 
   * New upstream version 2.3.4 (closes: #1111252).
-  * d/symbols: add new symbols for libzpool6linux.
+  * d/symbols: add new symbols for libzpool7linux.
   * d/install: install new zfs-mount@.service in zfsutils-linux.
 
  -- Shengqi Chen <harry@debian.org>  Wed, 27 Aug 2025 00:38:22 +0800
@@ -40,7 +40,7 @@ zfs-linux (2.3.4~git20250812.3b64a96-1) experimental; urgency=medium
   * New upstream version 2.3.4~git20250812.3b64a96 (from zfs-2.3.4-staging).
   * d/patches: further patch pyzfs to fix error on debian pre-release version.
   * d/install: add new manpage for zfs-rewrite in zfsutils-linux.
-  * d/symbols: remove missing symbol for libzpool6linux.
+  * d/symbols: remove missing symbol for libzpool7linux.
   * d/rules: install scripts/objtool-wrapper.in into dkms tree.
 
   [ Attila Fülöp ]
@@ -73,7 +73,7 @@ zfs-linux (2.3.1-1) unstable; urgency=medium
   * d/rules: install pyzfs documentation into usr/share/doc/python3-pyzfs
     + add link for backward compatibility
     + add pyzfs-doc.doc-base
-  * Add new symbols in libzpool6linux
+  * Add new symbols in libzpool7linux
   * Remove unused lintian-overrides
 
  -- Shengqi Chen <harry@debian.org>  Wed, 12 Mar 2025 13:56:58 +0800

@@ -7,7 +7,7 @@ if test "$1" = install -o "$1" = upgrade; then
 	# moved ones. These diversions should be removed via postinst once
 	# trixie is released.
 	for lib in zfs_core.so.3 zfs_core.so.3.0.0; do
-		dpkg-divert --package libzfs6linux --no-rename --divert "/lib/#DEB_HOST_MULTIARCH#/lib$lib.usr-is-merged" --add "/lib/#DEB_HOST_MULTIARCH#/lib$lib"
+		dpkg-divert --package libzfs7linux --no-rename --divert "/lib/#DEB_HOST_MULTIARCH#/lib$lib.usr-is-merged" --add "/lib/#DEB_HOST_MULTIARCH#/lib$lib"
 	done
 fi
 
