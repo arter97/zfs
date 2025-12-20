@@ -215,7 +215,6 @@ Architecture: all
 Multi-Arch: foreign
 Depends: busybox-initramfs | busybox-static | busybox,
          initramfs-tools,
-         zfs-modules | zfs-dkms,
          zfsutils-linux (>= ${source:Version}),
          ${misc:Depends}
 Breaks: zfsutils-linux (<= 0.7.11-2)
@@ -232,7 +231,6 @@ Package: zfs-dracut
 Architecture: all
 Multi-Arch: foreign
 Depends: dracut,
-         zfs-modules | zfs-dkms,
          zfsutils-linux (>= ${source:Version}),
          ${misc:Depends}
 Description: OpenZFS root filesystem capabilities for Linux - dracut
@@ -254,8 +252,9 @@ Depends: libnvpair3linux (= ${binary:Version}),
          python3,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: zfs-modules | zfs-dkms, zfs-zed
-Breaks: spl (<< 0.7.9-2),
+Recommends: zfs-zed
+Breaks: openrc,
+        spl (<< 0.7.9-2),
         spl-dkms (<< 0.8.0~rc1),
         zfs-dkms (<< ${source:Version}),
         zfs-dkms (>> ${source:Version}...)
@@ -277,8 +276,7 @@ Package: zfs-zed
 Section: contrib/admin
 Architecture: linux-any
 Pre-Depends: ${misc:Pre-Depends}
-Depends: zfs-modules | zfs-dkms,
-         zfsutils-linux (>= ${binary:Version}),
+Depends: zfsutils-linux (>= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: OpenZFS Event Daemon
