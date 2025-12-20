@@ -1,0 +1,12 @@
+arch-dependent-file-in-usr-share
+manual-page-for-system-command
+arch-dep-package-has-big-usr-share
+spare-manual-page
+national-encoding [usr/share/zfs/zfs-tests/tests/functional/channel_program/lua_core/tst.lib_table.lua]
+script-not-executable [usr/share/zfs/zfs-tests/tests/functional/l2arc/l2arc.cfg]
+script-not-executable [usr/share/zfs/zfs-tests/tests/functional/trim/trim.cfg]
+executable-not-elf-or-script [usr/share/zfs/zfs-tests/tests/functional/cli_root/zpool_set/zpool_set_common.kshlib]
+package-contains-documentation-outside-usr-share-doc [usr/share/zfs/zfs-tests/*]
+script-not-executable [usr/share/zfs/common.sh]
+script-not-executable [usr/share/zfs/zfs-tests/include/default.cfg]
+script-not-executable [usr/share/zfs/zfs-tests/tests/functional/*.kshlib]
