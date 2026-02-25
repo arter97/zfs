@@ -137,8 +137,8 @@ Section: contrib/libs
 Architecture: linux-any
 Multi-Arch: same
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Breaks: libzpool2, libzpool5
-Replaces: libzpool2, libzpool5
+Breaks: libzpool2, libzpool5, libzpool5linux, libzpool6linux
+Replaces: libzpool2, libzpool5, libzpool5linux, libzpool6linux
 Description: OpenZFS pool library for Linux
  OpenZFS is a storage platform that encompasses the functionality of
  traditional filesystems and volume managers. It supports data checksums,
