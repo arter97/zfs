@@ -18,9 +18,15 @@ import os.path
 
 srcdir = "@abs_top_srcdir@/contrib/pyzfs"
 
+# Python does not accept debian versioning schema
+version = "@VERSION@"
+if "~" in version:
+    main_r, pre_r = version.split("~")
+    version = main_r + "a1"
+
 setup(
     name="pyzfs",
-    version="@VERSION@",
+    version=version,
     description="Wrapper for libzfs_core",
     author="ClusterHQ",
     author_email="support@clusterhq.com",
