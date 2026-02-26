@@ -6,8 +6,14 @@ if test "$1" = configure; then
 	# DEP17 P1 M8. Clean up after libzfs6linux.preinst. This code should be
 	# removed once the diversions are deleted via postinst.
 	# see: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1092598
+	multiarch="$(dpkg-architecture -qDEB_HOST_MULTIARCH)"
 	for lib in zfs_core.so.3 zfs_core.so.3.0.0; do
-		dpkg-divert --package libzfs6linux --no-rename --divert "/lib/#DEB_HOST_MULTIARCH#/lib$lib.usr-is-merged" --remove "/lib/#DEB_HOST_MULTIARCH#/lib$lib"
+		lib_path="/lib/$multiarch/lib$lib"
+		diversion_path="$lib_path.usr-is-merged"
+
+		# Handle both libzfs6linux and libzfs7linux
+		dpkg-divert --package libzfs6linux --no-rename --divert "$diversion_path" --remove "$lib_path" 2>/dev/null || \
+		dpkg-divert --package libzfs7linux --no-rename --divert "$diversion_path" --remove "$lib_path" 2>/dev/null || true
 	done
 fi
 
