@@ -1,3 +1,9 @@
+zfs-linux (2.4.1-3arter97) nodistro; urgency=medium
+
+  * Backported #18235 for important bug-fix
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Tue, 24 Mar 2026 20:31:00 +0900
+
 zfs-linux (2.4.1-2arter97) nodistro; urgency=medium
 
   * Fix usr-is-merged migration from 2.4.0
