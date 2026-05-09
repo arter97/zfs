@@ -333,7 +333,7 @@ sas_handler() {
 		# whenever possible. Use awk to isolate lowest instance of
 		# sd device member in dm device group regardless of string
 		# length.
-		DEV=$(ls "/sys/block/$DMDEV/slaves" | awk '
+		DEV=$(ls "/sys/block/$DMDEV/slaves" | gawk '
 			{ len=sprintf ("%20s",length($0)); gsub(/ /,0,str); a[NR]=len "_" $0; }
 			END {
 				asort(a)
