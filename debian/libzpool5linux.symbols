@@ -1523,6 +1523,7 @@ libzpool.so.5 libzpool5linux #MINVER#
  metaslab_class_expandable_space@Base 0.8.2
  metaslab_class_fragmentation@Base 0.8.2
  metaslab_class_get_alloc@Base 0.8.2
+ metaslab_class_get_dalloc@Base 2.2.10
  metaslab_class_get_deferred@Base 0.8.2
  metaslab_class_get_dspace@Base 0.8.2
  metaslab_class_get_space@Base 0.8.2
@@ -1872,6 +1873,7 @@ libzpool.so.5 libzpool5linux #MINVER#
  spa_get_last_errlog_size@Base 2.1.99-0ubuntu1
  spa_get_last_removal_txg@Base 0.8.2
  spa_get_log_state@Base 0.8.2
+ spa_get_min_alloc_range@Base 2.2.10
  spa_get_rootblkptr@Base 0.8.2
  spa_get_slop_space@Base 0.8.2
  spa_get_stats@Base 0.8.2
@@ -1973,6 +1975,7 @@ libzpool.so.5 libzpool5linux #MINVER#
  spa_open@Base 0.8.2
  spa_open_ref@Base 0.8.2
  spa_open_rewind@Base 0.8.2
+ spa_open_txg@Base 2.2.10
  spa_preferred_class@Base 0.8.2
  spa_prev_software_version@Base 0.8.2
  spa_prop_clear_bootfs@Base 0.8.2
@@ -2388,6 +2391,7 @@ libzpool.so.5 libzpool5linux #MINVER#
  vdev_rebuild_restart@Base 2.0
  vdev_rebuild_stop_all@Base 2.0
  vdev_rebuild_stop_wait@Base 2.0
+ vdev_rebuild_txgs@Base 2.2.10
  vdev_rele@Base 0.8.2
  vdev_removal_max_span@Base 0.8.2
  vdev_remove_child@Base 0.8.2
