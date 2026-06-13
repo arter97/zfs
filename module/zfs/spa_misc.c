@@ -1754,6 +1754,12 @@ spa_syncing_txg(spa_t *spa)
 	return (spa->spa_syncing_txg);
 }
 
+uint64_t
+spa_open_txg(spa_t *spa)
+{
+	return (spa->spa_dsl_pool->dp_tx.tx_open_txg);
+}
+
 /*
  * Return the last txg where data can be dirtied. The final txgs
  * will be used to just clear out any deferred frees that remain.
@@ -1899,6 +1905,11 @@ spa_update_dspace(spa_t *spa)
 		ASSERT3U(spa->spa_dspace, >=, spa->spa_nonallocating_dspace);
 		spa->spa_dspace -= spa->spa_nonallocating_dspace;
 	}
+	spa->spa_dspace = spa->spa_dspace +
+	    metaslab_class_get_dalloc(spa_special_class(spa)) +
+	    metaslab_class_get_dalloc(spa_dedup_class(spa)) +
+	    ddt_get_dedup_dspace(spa) +
+	    brt_get_dspace(spa);
 }
 
 /*
