@@ -1,6 +1,24 @@
 dnl # SPDX-License-Identifier: CDDL-1.0
 AC_DEFUN([ZFS_AC_KERNEL_SRC_CREATE], [
 	dnl #
+	dnl # 7.3 API change
+	dnl # The flag arg is dropped
+	dnl #
+	ZFS_LINUX_TEST_SRC([create_no_flag], [
+		#include <linux/fs.h>
+		#include <linux/sched.h>
+
+		static int inode_create(struct mnt_idmap *idmap,
+		    struct inode *inode ,struct dentry *dentry,
+		    umode_t umode) { return 0; }
+
+		static const struct inode_operations
+			iops __attribute__ ((unused)) = {
+			.create         = inode_create,
+		};
+	],[])
+
+	dnl #
 	dnl # 6.3 API change
 	dnl # The first arg is changed to struct mnt_idmap *
 	dnl #
@@ -54,27 +72,38 @@ AC_DEFUN([ZFS_AC_KERNEL_SRC_CREATE], [
 ])
 
 AC_DEFUN([ZFS_AC_KERNEL_CREATE], [
-	AC_MSG_CHECKING([whether iops->create() takes struct mnt_idmap*])
-	ZFS_LINUX_TEST_RESULT([create_mnt_idmap], [
-		AC_MSG_RESULT(yes)
+	AC_MSG_CHECKING([whether iops->create() takes a flag arg])
+	ZFS_LINUX_TEST_RESULT([create_no_flag], [
+		AC_MSG_RESULT(no)
 		AC_DEFINE(HAVE_IOPS_CREATE_IDMAP, 1,
 		   [iops->create() takes struct mnt_idmap*])
+		AC_DEFINE(HAVE_IOPS_CREATE_NO_FLAG_ARG, 1,
+		   [iops->create() does not take a flag arg])
 	],[
-		AC_MSG_RESULT(no)
+		AC_MSG_RESULT(yes)
 
-		AC_MSG_CHECKING([whether iops->create() takes struct user_namespace*])
-		ZFS_LINUX_TEST_RESULT([create_userns], [
+		AC_MSG_CHECKING([whether iops->create() takes struct mnt_idmap*])
+		ZFS_LINUX_TEST_RESULT([create_mnt_idmap], [
 			AC_MSG_RESULT(yes)
-			AC_DEFINE(HAVE_IOPS_CREATE_USERNS, 1,
-			   [iops->create() takes struct user_namespace*])
+			AC_DEFINE(HAVE_IOPS_CREATE_IDMAP, 1,
+			   [iops->create() takes struct mnt_idmap*])
 		],[
 			AC_MSG_RESULT(no)
 
-			AC_MSG_CHECKING([whether iops->create() passes flags])
-			ZFS_LINUX_TEST_RESULT([create_flags], [
+			AC_MSG_CHECKING([whether iops->create() takes struct user_namespace*])
+			ZFS_LINUX_TEST_RESULT([create_userns], [
 				AC_MSG_RESULT(yes)
+				AC_DEFINE(HAVE_IOPS_CREATE_USERNS, 1,
+				   [iops->create() takes struct user_namespace*])
 			],[
-				ZFS_LINUX_TEST_ERROR([iops->create()])
+				AC_MSG_RESULT(no)
+
+				AC_MSG_CHECKING([whether iops->create() passes flags])
+				ZFS_LINUX_TEST_RESULT([create_flags], [
+					AC_MSG_RESULT(yes)
+				],[
+					ZFS_LINUX_TEST_ERROR([iops->create()])
+				])
 			])
 		])
 	])
