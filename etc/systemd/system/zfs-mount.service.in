@@ -4,6 +4,7 @@ Documentation=man:zfs(8)
 DefaultDependencies=no
 After=zfs-import.target
 After=systemd-remount-fs.service
+After=zfs-load-module.service
 Before=local-fs.target
 ConditionPathIsDirectory=/sys/module/zfs
 
