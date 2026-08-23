@@ -66,6 +66,7 @@ PRE_BUILD="configure
       fi
     }
   )
+  --enable-linux-experimental
 "
 POST_BUILD="scripts/dkms.postbuild
   -n \${PACKAGE_NAME}
