@@ -1,0 +1,5 @@
+Version: 5
+
+Source: https://zfsonlinux.org/
+Matching-Pattern: .*zfs-@STABLE_VERSION@\.tar\.gz$
+Pgp-Mode: auto
