@@ -202,6 +202,20 @@ timer units are provided.
 .Cm zfs-scrub-\fImonthly\fB@\fIotherpool\fB.timer
 .Cm --now
 .El
+.Pp
+On Debian systems, a periodic scrub is additionally run for all online pools
+on the second Sunday of each month, without enabling any per-pool timer.
+Whether a given pool is scrubbed is controlled by the
+.Sy org.debian:periodic-scrub
+user property on the pool's root dataset, which accepts
+.Sy auto
+.Pq the default, same as unset ,
+.Sy enable ,
+or
+.Sy disable .
+See
+.Pa /usr/share/doc/zfsutils-linux/README.Debian
+for details.
 .
 .Sh SEE ALSO
 .Xr systemd.timer 5 ,
