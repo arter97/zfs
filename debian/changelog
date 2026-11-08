@@ -1,3 +1,9 @@
+zfs-linux (2.4.4-3arter97) nodistro; urgency=medium
+
+  * Linux 7.3 compat.
+
+ -- Juhyung Park <qkrwngud825@gmail.com>  Sun, 08 Nov 2026 19:33:00 +0900
+
 zfs-linux (2.4.4-2arter97) nodistro; urgency=medium
 
   * Important dedup fixes backported.
